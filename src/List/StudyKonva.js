@@ -1,4 +1,4 @@
-import { Stage, Layer, Text, Image } from "react-konva";
+import { Stage, Layer, Text, Image, Group } from "react-konva";
 import useImage from "use-image";
 
 import Jake from "../assets/img/jake.png";
@@ -27,20 +27,22 @@ const StudyKonva = () => {
     <Stage width={windowWith} height={windowHeight}>
       <Layer>
         <Text text="let's practice Konva" fontSize={30} fontStyle={"bold"} />
-        <Image
-          draggable
-          x={50}
-          y={50}
-          image={image}
-          width={jakeWidth}
-          height={jakeHeight}
-          dragBoundFunc={({ x, y }) => {
-            return {
-              x: calculatePosition(x, jakeWidth, windowWith),
-              y: calculatePosition(y, jakeHeight, windowHeight),
-            };
-          }}
-        />
+        <Group draggable>
+          <Text text="This is Jake" fontSize={15} x={100} y={30} />
+          <Image
+            x={50}
+            y={50}
+            image={image}
+            width={jakeWidth}
+            height={jakeHeight}
+            dragBoundFunc={({ x, y }) => {
+              return {
+                x: calculatePosition(x, jakeWidth, windowWith),
+                y: calculatePosition(y, jakeHeight, windowHeight),
+              };
+            }}
+          />
+        </Group>
       </Layer>
     </Stage>
   );
