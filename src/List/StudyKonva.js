@@ -2,9 +2,7 @@ import { Stage, Layer, Text, Image, Group } from "react-konva";
 import useImage from "use-image";
 
 import Jake from "../assets/img/jake.png";
-
-const windowWith = window.innerWidth;
-const windowHeight = window.innerHeight;
+import { useEffect, useState } from "react";
 
 // jake size
 const jakeWidth = 200;
@@ -23,11 +21,44 @@ const calculatePosition = (position, imageSize, positionSize) => {
 
 const StudyKonva = () => {
   const [image] = useImage(Jake);
+  const [windowSize, setWindowSize] = useState({
+    windowWidth: window.innerWidth,
+    windowHeight: window.innerHeight,
+  });
+
+  const { windowWidth, windowHeight } = windowSize;
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowSize({
+        windowWidth: window.innerWidth,
+        windowHeight: window.innerHeight,
+      });
+    };
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
-    <Stage width={windowWith} height={windowHeight}>
+    <Stage width={windowWidth} height={windowHeight}>
       <Layer>
         <Text text="let's practice Konva" fontSize={30} fontStyle={"bold"} />
-        <Group draggable>
+        <Group
+          draggable
+          dragBoundFunc={({ x, y }) => {
+            console.log({
+              x: calculatePosition(x, jakeWidth, windowWidth),
+              y: calculatePosition(y, jakeHeight, windowHeight),
+            });
+            return {
+              x: calculatePosition(x, jakeWidth + 100, windowWidth),
+              y: calculatePosition(y, jakeHeight + 30, windowHeight),
+            };
+          }}
+        >
           <Text text="This is Jake" fontSize={15} x={100} y={30} />
           <Image
             x={50}
@@ -35,12 +66,6 @@ const StudyKonva = () => {
             image={image}
             width={jakeWidth}
             height={jakeHeight}
-            dragBoundFunc={({ x, y }) => {
-              return {
-                x: calculatePosition(x, jakeWidth, windowWith),
-                y: calculatePosition(y, jakeHeight, windowHeight),
-              };
-            }}
           />
         </Group>
       </Layer>
